@@ -1,0 +1,24 @@
+@import "bootstrap";
+@import "bootstrap-responsive";
+
+.container-fluid {
+
+}
+
+.footer {
+  margin-top: 45px;
+  padding: 20px 20px 20px;
+  border-top: 1px solid #000;
+}
+
+.facebook-login {
+  vertical-align: middle;
+  display: inline-block;
+  width: 150px;
+  height: 23px;
+  background: url('facebook_signin.png') no-repeat top;
+}
+
+.facebook-login:active {
+  background: url('facebook_signin.png') no-repeat bottom;
+}
