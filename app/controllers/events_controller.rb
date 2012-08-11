@@ -20,15 +20,19 @@ class EventsController < ApplicationController
   end
 
   def update
-    #TODO - only name should be required, the others can be blanked out provided empty string is provided
-    #TODO - do we need to set these all explicitly for json?
-    @event.name = params[:name] unless params[:name].nil?
-    @event.date = params[:date] unless params[:date].nil?
-    @event.comment = params[:comment] unless params[:comment].nil?
+    req = ActiveSupport::JSON.decode(request.body)
+    @event = current_user.events.find_by_id(params[:id])
 
-    #@event = current_user.problems.build(params[:event])
+    if @event.nil?
+      render :json => { :errors => ["Event does not exist."] }, :status => 422
+    end
 
     begin
+      @event.name = req["event"]["name"] unless req["event"]["name"].nil?
+      @event.eventDate = req["event"]["eventDate"] unless req["event"]["eventDate"].nil?
+      @event.eventType = req["event"]["eventType"] unless req["event"]["eventType"].nil?
+      @event.comment = req["event"]["comment"] unless req["event"]["comment"].nil?
+
       @event.save!
       render :json => @event
     rescue
@@ -39,21 +43,44 @@ class EventsController < ApplicationController
 
   def create
     #TODO - need to accept only json and return json
-    @event = current_user.problems.build(params[:event])
-  end
+    req = ActiveSupport::JSON.decode(request.body)
+    @event = current_user.events.build(req["event"])
 
-  def destroy
     begin
-      #TODO - is this the right syntax?
-      @event.destroy!
+      @event.save!
       render :json => @event
     rescue
       render :json => { :errors => @event.errors.full_messages }, :status => 422
     end
   end
 
-  def search
+  def destroy
+    @event = current_user.events.find_by_id(params[:id])
 
+    if @event.nil?
+      render :json => { :errors => ["Event does not exist."] }, :status => 422
+    end
+
+    begin
+      #TODO - delete or destroy?
+      @event.destroy
+      #TODO - what is the right status?
+      render :json => { :status => 200 }
+    rescue
+      render :json => { :errors => @event.errors.full_messages }, :status => 422
+    end
+  end
+
+  def search
+    #TODO - implement
+  end
+
+  def types
+    @distinct_types = [];
+    current_user.events.select("DISTINCT(eventType)").each do |eventType|
+      @distinct_types << eventType
+    end
+    render :json => { :types => @distinct_types}
   end
 
   private
@@ -63,7 +90,7 @@ class EventsController < ApplicationController
       rescue
         respond_to do |format|
           format.html { redirect_to error_path, :flash => { :failure => "User does not exist"} }
-          format.json { render :json => { :errors => "User does not exist"}, :status => 422 }
+          format.json { render :json => { :errors => ["User does not exist"] }, :status => 422 }
         end
       end
     end
@@ -73,10 +100,10 @@ class EventsController < ApplicationController
         #TODO - allow an admin to see any event
         @event = current_user.events.find(params[:id])
       rescue
-        response_to do |format|
+        respond_to do |format|
           format.html { redirect_to error_path, :flash => { :failure => "Event does not exist" } }
           #TODO - is this the right error code?
-          format.json { render :json => {:errors => "Event does not exist" }, :status => 422 }
+          format.json { render :json => {:errors => ["Event does not exist"] }, :status => 422 }
         end
       end
     end

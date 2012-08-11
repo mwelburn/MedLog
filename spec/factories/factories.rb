@@ -1,3 +1,5 @@
+require 'factory_girl'
+
 # By using the symbol ':user', we get Factory Girl to simulate the User model
 FactoryGirl.define do
   sequence :email do |n|
@@ -9,7 +11,7 @@ FactoryGirl.define do
   end
 
   sequence :name do |n|
-    "Test User #{n}"
+    "Test Name #{n}"
   end
 
   factory :user do
@@ -20,11 +22,10 @@ FactoryGirl.define do
     password_confirmation  "foobar"
   end
 
-  factory :finger do
+  factory :event do
     user
-    digit       3
-    side        1
-    size        4.25
+    name        "Flu Shot"
+    date        Date.new(2012,5,1)
     comment     "foobar"
   end
 end

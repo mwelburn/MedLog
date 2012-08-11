@@ -13,4 +13,6 @@
 //= require jquery
 //= require jquery_ujs
 //= require bootstrap
+//= require bootstrap-datepicker
+//= require knockout-2.1.0
 //= require_tree .

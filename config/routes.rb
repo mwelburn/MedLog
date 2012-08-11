@@ -13,6 +13,8 @@ Shot::Application.routes.draw do
     resources :events, :only => [ :index, :show, :update, :create, :destroy ]
   end
 
+  match 'users/:user_id/eventTypes' => 'events#types', :as => :eventTypes
+
   root :to => 'home#index'
 
   match '/error', :to => 'pages#error', :as => 'error'
