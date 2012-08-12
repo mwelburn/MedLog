@@ -4,6 +4,7 @@ class EventsController < ApplicationController
   before_filter :load_event, :only => [:show, :update, :destroy]
 
   def index
+    #TODO - this should be admin only, but should it even exist?
     @events = @user.events.all
     respond_to do |format|
       format.html { redirect_to @user }
@@ -12,6 +13,7 @@ class EventsController < ApplicationController
   end
 
   def show
+    #TODO - is the HTML version even needed?
     @events = @user.events.all
     respond_to do |format|
       format.html
@@ -76,6 +78,7 @@ class EventsController < ApplicationController
   end
 
   def types
+    #TODO - Set up the default types that have images. Don't add those values again in the iterator
     @distinct_types = [];
     current_user.events.select("DISTINCT(eventType)").each do |eventType|
       @distinct_types << eventType

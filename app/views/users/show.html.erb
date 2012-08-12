@@ -1,78 +1,82 @@
-<a class="btn" title="New Event" alt="New Event" href="#new_modal" data-toggle="modal">New Event</a>
+<div class="row-fluid">
+  <div class="span8 offset2">
+    <a class="btn" title="New Event" alt="New Event" href="#new_modal" data-toggle="modal">New Event</a>
 
-<ul data-bind="foreach: entries">
-  <li>
-    <div>IMAGE</div>
-    <div data-bind="text: name()"></div>
-    <div>
-      <span data-bind="text: eventType()"></span>&nbsp;-&nbsp;
-      <span data-bind="text: eventDate()"></span>
-    </div>
-    <div>
-      <span data-bind="text: comment()"></span>
-      <div>
-        <!-- TODO - enable edit -->
-        <span>
-          <a data-bind="click: $parent.initEdit" href="#new_modal" data-toggle="modal">Edit</a>
-        </span>
-        <span>
-          <a data-bind="click: $parent.initDelete" href="#delete_modal" data-toggle="modal">Delete</a>
-        </span>
+    <ul data-bind="foreach: entries">
+      <li>
+        <div>IMAGE</div>
+        <div data-bind="text: name()"></div>
+        <div>
+          <span data-bind="text: eventType()"></span>&nbsp;-&nbsp;
+          <span data-bind="text: eventDate()"></span>
+        </div>
+        <div>
+          <span data-bind="text: comment()"></span>
+          <div>
+            <!-- TODO - enable edit -->
+            <span>
+              <a data-bind="click: $parent.initEdit" href="#new_modal" data-toggle="modal">Edit</a>
+            </span>
+            <span>
+              <a data-bind="click: $parent.initDelete" href="#delete_modal" data-toggle="modal">Delete</a>
+            </span>
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="modal fade" id="new_modal">
+      <div class="modal-header">
+        <a class="close" data-dismiss="modal">&times;</a>
+        <h3>New Event</h3>
+      </div>
+      <div class="modal-body">
+        <span id="new-error-messages"></span>
+        <div>
+          <input id="id-entry" type="hidden"/>
+          <label for="type-entry">Type:</label>
+          <input id="type-entry" type="text" data-provide="typeahead" title="Type" alt="Type"/>
+          <label for="name-entry">Name:</label>
+          <input id="name-entry" type="text" title="Caption" alt="Caption"/>
+          <label for="comments-entry">Comments:</label>
+          <textarea id="comments-entry" title="Comments" alt="Comments"></textarea>
+          <label for="datepicker-entry">Date:</label>
+          <input id="datepicker-entry" class="span2" type="text">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" id="btn-add-cancel" class="btn" data-dismiss="modal">Cancel</a>
+        <a href="#" id="btn-add-entry" class="btn btn-primary" data-bind="click: submitUpdate">Save Changes</a>
       </div>
     </div>
-  </li>
-</ul>
 
-<div class="modal fade" id="new_modal">
-  <div class="modal-header">
-    <a class="close" data-dismiss="modal">&times;</a>
-    <h3>New Event</h3>
-  </div>
-  <div class="modal-body">
-    <span id="new-error-messages"></span>
-    <div>
-      <input id="id-entry" type="hidden"/>
-      <label for="type-entry">Type:</label>
-      <input id="type-entry" type="text" data-provide="typeahead" title="Type" alt="Type"/>
-      <label for="name-entry">Name:</label>
-      <input id="name-entry" type="text" title="Caption" alt="Caption"/>
-      <label for="comments-entry">Comments:</label>
-      <textarea id="comments-entry" title="Comments" alt="Comments"></textarea>
-      <label for="datepicker-entry">Date:</label>
-      <input id="datepicker-entry" class="span2" type="text">
+    <div class="modal fade" id="delete_modal">
+      <div class="modal-header">
+        <a class="close" data-dismiss="modal">&times;</a>
+        <h3>Delete Event</h3>
+      </div>
+      <div class="modal-body">
+        <div>Are you sure you want to delete this event?</div>
+        <div>
+            <input id="id-delete" type="hidden"/>
+            <label for="type-delete">Type:</label>
+            <input id="type-delete" type="text" readonly></input>
+            <label for="name-delete">Name:</label>
+            <input id="name-delete" type="text" readonly></input>
+            <label for="comments-delete">Comments:</label>
+            <textarea id="comments-delete" readonly></textarea>
+            <label for="date-delete">Date:</label>
+            <input id="date-delete" type="text" readonly></input>
+        </div>
+        <div>
+            <span id="delete-error-messages"></span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" id="btn-delete-cancel" class="btn" data-dismiss="modal">No</a>
+        <a href="#" id="btn-delete-entry" class="btn btn-primary" data-bind="click: deleteEntry">Yes</a>
+      </div>
     </div>
-  </div>
-  <div class="modal-footer">
-    <a href="#" id="btn-add-cancel" class="btn" data-dismiss="modal">Cancel</a>
-    <a href="#" id="btn-add-entry" class="btn btn-primary" data-bind="click: submitUpdate">Save Changes</a>
-  </div>
-</div>
-
-<div class="modal fade" id="delete_modal">
-  <div class="modal-header">
-    <a class="close" data-dismiss="modal">&times;</a>
-    <h3>Delete Event</h3>
-  </div>
-  <div class="modal-body">
-    <div>Are you sure you want to delete this event?</div>
-    <div>
-        <input id="id-delete" type="hidden"/>
-        <label for="type-delete">Type:</label>
-        <input id="type-delete" type="text" readonly></input>
-        <label for="name-delete">Name:</label>
-        <input id="name-delete" type="text" readonly></input>
-        <label for="comments-delete">Comments:</label>
-        <textarea id="comments-delete" readonly></textarea>
-        <label for="date-delete">Date:</label>
-        <input id="date-delete" type="text" readonly></input>
-    </div>
-    <div>
-        <span id="delete-error-messages"></span>
-    </div>
-  </div>
-  <div class="modal-footer">
-    <a href="#" id="btn-delete-cancel" class="btn" data-dismiss="modal">No</a>
-    <a href="#" id="btn-delete-entry" class="btn btn-primary" data-bind="click: deleteEntry">Yes</a>
   </div>
 </div>
 

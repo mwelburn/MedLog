@@ -47,13 +47,13 @@ class User < ActiveRecord::Base
   end
 
   def self.find_for_twitter_oauth(access_token, signed_in_resource=nil)
-    data = access_token.extra.raw_info
-    if user = User.where(:twitter_id => data.id).first
+    data = access_token
+    if user = User.where(:twitter_id => data.uid).first
       user
     else # Create a user with a stub password.
       logger.debug data
-      #need to have a followup page that asks for an email?
-      user = User.new(:email => data.email, :name => data.name, :username => data.screen_name, :password => Devise.friendly_token[0,20])
+      #TODO - need to have a followup page that asks for an email?
+      user = User.new(:name => data.info.name, :username => data.info.nickname, :password => Devise.friendly_token[0,20])
       user.twitter_id = data.id
       begin
         user.save!
@@ -70,7 +70,7 @@ class User < ActiveRecord::Base
       if data = session["devise.facebook_data"] && session["devise.facebook_data"]["extra"]["raw_info"]
         #Currently do nothing. Maybe in the future we can keep information up to date (email,name,username/vanity)
         #assume whatever they start with, they might modify here to customize and we don't want to overwrite
-      elsif data = session["devise.twitter_data"] && session["devise.twitter_data"]["extra"]["raw_info"]
+      elsif data = session["devise.twitter_data"]
         #Currently do nothing. Maybe in the future we can keep information up to date (email,username)
         #assume whatever they start with, they might modify here to customize and we don't want to overwrite
       end

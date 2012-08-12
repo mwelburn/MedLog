@@ -21,6 +21,11 @@ class UsersController < ApplicationController
     def load_user
       begin
         @user = User.find(params[:id])
+
+        #TODO - only an admin should be able to look at other people
+        if !current_user?(@user)
+          raise "No access to this user"
+        end
       rescue
         response_to do |format|
           format.html { redirect_to error_path, :flash => { :failure => "User does not exist" } }

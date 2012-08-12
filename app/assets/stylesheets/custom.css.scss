@@ -15,6 +15,14 @@
   background: url('facebook_signin.png') no-repeat top;
 }
 
+.twitter-login {
+  vertical-align: middle;
+  display: inline-block;
+  width: 151px;
+  height: 24px;
+  background: url('sign-in-with-twitter-d.png') no-repeat top;
+}
+
 .facebook-login:active {
   background: url('facebook_signin.png') no-repeat bottom;
 }
