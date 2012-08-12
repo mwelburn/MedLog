@@ -27,7 +27,7 @@ class UsersController < ApplicationController
           raise "No access to this user"
         end
       rescue
-        response_to do |format|
+        respond_to do |format|
           format.html { redirect_to error_path, :flash => { :failure => "User does not exist" } }
           #TODO - is this the right error code?
           format.json { render :json => {:errors => "User does not exist" }, :status => 422 }
