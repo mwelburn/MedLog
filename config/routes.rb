@@ -17,9 +17,9 @@ MedLog::Application.routes.draw do
 
   root :to => 'home#index'
 
-  match '/error', :to => 'pages#error', :as => 'error'
+  match '/error', :to => 'home#error', :as => 'error'
   #handling people who give us invalid routes
-  match '*a', :to => 'pages#error'
+  match '*a', :to => 'home#error'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
