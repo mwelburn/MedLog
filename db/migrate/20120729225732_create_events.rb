@@ -5,7 +5,7 @@ class CreateEvents < ActiveRecord::Migration
       t.text :name, :null => false
       t.date :eventDate, :null => false
       t.text :comment, :default => "", :null => false
-      t.text :eventType, :default => "", :null => false
+      t.text :eventType, :null => false
 
       t.timestamps
     end

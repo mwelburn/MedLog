@@ -1,6 +1,6 @@
 <div class="row-fluid">
   <div class="span8 offset2">
-    <a class="btn" title="New Event" alt="New Event" href="#new_modal" data-toggle="modal">New Event</a>
+    <a class="btn" id="new-event-btn" title="New Event" alt="New Event" href="#new_modal" data-toggle="modal">New Event</a>
 
     <ul data-bind="foreach: entries">
       <li>
@@ -8,7 +8,7 @@
         <div data-bind="text: name()"></div>
         <div>
           <span data-bind="text: eventType()"></span>&nbsp;-&nbsp;
-          <span data-bind="text: eventDate()"></span>
+          <span data-bind="text: formattedEventDate()"></span>
         </div>
         <div>
           <span data-bind="text: comment()"></span>
@@ -39,9 +39,9 @@
           <label for="name-entry">Name:</label>
           <input id="name-entry" type="text" title="Caption" alt="Caption"/>
           <label for="comments-entry">Comments:</label>
-          <textarea id="comments-entry" title="Comments" alt="Comments"></textarea>
+          <textarea id="comments-entry" class="comments-textarea" title="Comments" alt="Comments"></textarea>
           <label for="datepicker-entry">Date:</label>
-          <input id="datepicker-entry" class="span2" type="text">
+          <input id="datepicker-entry" type="text">
         </div>
       </div>
       <div class="modal-footer">
@@ -56,7 +56,8 @@
         <h3>Delete Event</h3>
       </div>
       <div class="modal-body">
-        <div>Are you sure you want to delete this event?</div>
+        <h3>Are you sure you want to delete this event?</h3>
+        <br/>
         <div>
             <input id="id-delete" type="hidden"/>
             <label for="type-delete">Type:</label>
@@ -64,7 +65,7 @@
             <label for="name-delete">Name:</label>
             <input id="name-delete" type="text" readonly></input>
             <label for="comments-delete">Comments:</label>
-            <textarea id="comments-delete" readonly></textarea>
+            <textarea id="comments-delete" class="comments-textarea" readonly></textarea>
             <label for="date-delete">Date:</label>
             <input id="date-delete" type="text" readonly></input>
         </div>
@@ -85,15 +86,28 @@
 
   var todaysDate = function()
   {
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1;
-    var yyyy = today.getFullYear();
+      return dateFormatter(new Date());
+  };
 
-    if (dd < 10) { dd = '0' + dd; }
-    if (mm < 10) { mm = '0' + mm; }
+  var dateFormatter = function(myDate)
+  {
+      var dd = myDate.getDate();
+      var mm = myDate.getMonth() + 1;
+      var yyyy = myDate.getFullYear();
 
-    return mm + '/' + dd + '/' + yyyy;
+      if (dd < 10) { dd = '0' + dd; }
+      if (mm < 10) { mm = '0' + mm; }
+
+      return mm + '/' + dd + '/' + yyyy;
+  };
+
+  var railsDateFormatter = function(myDate)
+  {
+      var mm = myDate.split("/")[0];
+      var dd = myDate.split("/")[1];
+      var yyyy = myDate.split("/")[2];
+
+      return yyyy + "-" + mm + "-" + dd ;
   };
 
   var buildErrorMessage = function(errorArray)
@@ -129,11 +143,13 @@
       var j$nameEntry = j$('#name-entry');
       var j$commentsEntry = j$("#comments-entry");
 
+      var j$newEventBtn = j$("#new-event-btn");
+
       j$datepickerEntry.attr('data-date-format', dateFormat);
-      j$datepickerEntry.attr('data-date', todaysDate);
       j$datepickerEntry.datepicker(
       {
-        format: dateFormat
+        format: dateFormat,
+        autoclose: true
       });
 
       j$btnAddCancel.click(function()
@@ -162,17 +178,17 @@
           j$commentsEntry.val("");
       }
 
-      var sortEvents = function(a, b)
+      var sortFunction = function(a, b)
       {
-          if (a.eventDate != b.eventDate)
+          if (a.eventDate() != b.eventDate())
           {
-              return a.eventDate > b.eventDate ? -1 : 1;
+              return a.eventDate() > b.eventDate() ? -1 : 1;
           }
           else
           {
               return a.created_at > b.created_at ? -1 : 1;
           }
-      };
+      }
 
       var FeedEntry = function(data)
       {
@@ -181,6 +197,20 @@
         self.id = data.id;
         self.eventType = ko.observable(data.eventType);
         self.eventDate = ko.observable(data.eventDate);
+        self.formattedEventDate = ko.computed(function()
+        {
+            myDate = self.eventDate();
+            var yyyy = myDate.split("-")[0];
+            var mm = myDate.split("-")[1];
+            var dd = myDate.split("-")[2];
+
+            return mm + "/" + dd + "/" + yyyy;
+        });
+        self.prettyEventDate = ko.computed(function()
+        {
+            //TODO - print format for the feed i.e. January 3rd, 2011
+            return self.formattedEventDate();
+        });
         self.name = ko.observable(data.name);
         self.comment = ko.observable(data.comment);
         self.created_at = data.created_at;
@@ -190,9 +220,7 @@
       {
         var self = this;
         self.entries = ko.observableArray([]);
-        self.entries.sort(sortEvents);
-
-        self.selectedItem = ko.observable();
+//        self.entries.sort( sortFunction );
 
         //TODO - should eventTypes be a ko.computed? Would that mess up if we use infinity scrolling
 
@@ -204,7 +232,7 @@
               name : j$nameEntry.val(),
               comment : j$commentsEntry.val(),
               eventType : j$typeEntry.val(),
-              eventDate : j$datepickerEntry.val()
+              eventDate : railsDateFormatter(j$datepickerEntry.val())
             }
 
             j$.ajax('/users/<%= @user.id %>/events.json',
@@ -217,7 +245,9 @@
                     console.log("Success");
                     console.log(result);
 
-                    self.entries.unshift( new FeedEntry(result) );
+                    self.entries.push( new FeedEntry(result) );
+                    //resort
+                    self.entries.sort( sortFunction );
 
                     j$("#new_modal").modal('hide');
 
@@ -239,10 +269,8 @@
 
         self.initEdit = function(entry)
         {
-            self.selectedItem(entry);
-
             j$idEntry.val(entry.id);
-            j$datepickerEntry.val(entry.eventDate());
+            j$datepickerEntry.val(entry.formattedEventDate());
             j$typeEntry.val(entry.eventType());
             j$nameEntry.val(entry.name());
             j$commentsEntry.val(entry.comment());
@@ -276,7 +304,7 @@
               name : j$nameEntry.val(),
               comment : j$commentsEntry.val(),
               eventType : j$typeEntry.val(),
-              eventDate : j$datepickerEntry.val()
+              eventDate : railsDateFormatter(j$datepickerEntry.val())
             }
 
             j$.ajax('/users/<%= @user.id %>/events/' + editId + '.json',
@@ -291,7 +319,10 @@
 
                     //remove old value, add the updated value
                     self.entries.remove(function(event) { return event.id == editId });
-                    self.entries.push(new FeedEntry(entry));
+                    self.entries.push( new FeedEntry(entry) );
+
+                    //resort
+                    self.entries.sort( sortFunction );
 
                     j$("#new_modal").modal('hide');
 
@@ -315,7 +346,7 @@
             self.entry_to_delete = entry;
 
             j$idDelete.val(entry.id);
-            j$dateDelete.val(entry.eventDate());
+            j$dateDelete.val(entry.formattedEventDate());
             j$typeDelete.val(entry.eventType());
             j$nameDelete.val(entry.name());
             j$commentsDelete.val(entry.comment());
@@ -412,6 +443,11 @@
       }
 
       resetForm();
+      j$newEventBtn.click(function()
+      {
+          //need to ensure this gets reset before showing form
+          resetForm();
+      });
 
       var fevm = new FeedEntryViewModel();
       ko.applyBindings(fevm);

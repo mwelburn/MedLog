@@ -6,6 +6,7 @@ class Event < ActiveRecord::Base
   attr_accessible :name, :eventDate, :eventType, :comment
 
   validates :user_id, :presence => true
+  validates :eventType, :presence => true
   validates :name, :presence => true
   validates :eventDate, :presence => true
 
