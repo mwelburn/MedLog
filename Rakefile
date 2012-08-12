@@ -4,4 +4,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-Shot::Application.load_tasks
+MedLog::Application.load_tasks
