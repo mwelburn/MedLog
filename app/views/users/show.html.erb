@@ -2,26 +2,22 @@
   <div class="span8 offset2">
     <a class="btn" id="new-event-btn" title="New Event" alt="New Event" href="#new_modal" data-toggle="modal">New Event</a>
 
-    <ul data-bind="foreach: entries">
+    <ul class="feed-events" data-bind="foreach: entries">
       <li>
-        <div>IMAGE</div>
-        <div data-bind="text: name()"></div>
-        <div>
-          <span data-bind="text: eventType()"></span>&nbsp;-&nbsp;
-          <span data-bind="text: formattedEventDate()"></span>
-        </div>
-        <div>
-          <span data-bind="text: comment()"></span>
-          <div>
-            <!-- TODO - enable edit -->
-            <span>
-              <a data-bind="click: $parent.initEdit" href="#new_modal" data-toggle="modal">Edit</a>
-            </span>
-            <span>
-              <a data-bind="click: $parent.initDelete" href="#delete_modal" data-toggle="modal">Delete</a>
-            </span>
-          </div>
-        </div>
+        <a class="feed-event-image" alt="Event Type Image" title="Event Type Image"></a>
+        <span class="feed-event-content">
+          <span class="feed-event-name" data-bind="text: name()"></span>
+          <span class="feed-event-type" data-bind="text: eventType()"></span>
+          <span class="feed-event-comment" data-bind="text: comment()"></span>
+          <span class="feed-event-date" data-bind="text: formattedEventDate()"></span>
+          <span>
+            <a data-bind="click: $parent.initEdit" href="#new_modal" data-toggle="modal">Edit</a>
+          </span>
+          <span>
+            <a data-bind="click: $parent.initDelete" href="#delete_modal" data-toggle="modal">Delete</a>
+          </span>
+        </span>
+        <div style="clear: both;"></div>
       </li>
     </ul>
 

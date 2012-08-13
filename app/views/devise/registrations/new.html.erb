@@ -46,7 +46,9 @@
         </div>
 
         <div>
-          <%= f.submit "Sign up", :class => "btn primary" %>
+          <%= f.submit "Sign up", :class => "btn btn-primary" %>
+          <br/>
+          <br/>
           <%= link_to "", user_omniauth_authorize_path(:facebook), :class => "facebook-login" %>
           <%= link_to "", user_omniauth_authorize_path(:twitter), :class => "twitter-login" %>
         </div>

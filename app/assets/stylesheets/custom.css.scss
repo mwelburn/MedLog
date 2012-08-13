@@ -33,4 +33,59 @@
 
 .comments-textarea {
   height: 125px;
+  margin-right: 10px;
 }
+
+.feed-events {
+  list-style: none;
+  margin: 10px 0 0 0;
+
+  li {
+    padding: 10px;
+    border-top: 1px;
+  }
+}
+
+.feed-event-content {
+  display: block;
+  padding-left: 36px;
+}
+
+.feed-event-name {
+  display: block;
+  font-weight: bold;
+}
+
+.feed-event-type {
+  display: block;
+}
+
+.feed-event-comment {
+  display: block;
+}
+
+.feed-event-date {
+  color: gray;
+}
+
+.feed-event-image {
+  float: left;
+  margin-right: 10px;
+
+  /* This is just a test */
+  background: url('glyphicons_194_circle_question_mark.png');
+  height: 26px;
+  width: 26px;
+}
+
+/*
+checkup - glyphicons_029_notes_2.png
+eye exam - glyphicons_051_eye_open.png
+shopping - glyphicons_202_shopping_cart.png
+heart - glyphicons_282_cardio.png
+doctor - glyphicons_298_hospital.png
+hospital - glyphicons_299_hospital_h.png
+shot - glyphicons_335_pin_classic.png
+exercise - glyphicons_356_dumbbell.png
+unknown - glyphicons_194_circle_question_mark.png -- add a tooltip saying to contact me for a new icon
+*/
