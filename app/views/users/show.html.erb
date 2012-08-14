@@ -168,7 +168,8 @@
       var resetForm = function()
       {
           j$idEntry.val("");
-          j$datepickerEntry.attr("value", todaysDate);
+          j$datepickerEntry.attr("value", todaysDate());
+          j$datepickerEntry.val(todaysDate())
           j$typeEntry.val("");
           j$nameEntry.val("");
           j$commentsEntry.val("");
@@ -228,7 +229,7 @@
               name : j$nameEntry.val(),
               comment : j$commentsEntry.val(),
               event_type : j$typeEntry.val(),
-              event_date : railsDateFormatter(j$datepickerEntry.attr("value"))
+              event_date : railsDateFormatter(j$datepickerEntry.val())
             }
 
             j$.ajax('/users/<%= @user.id %>/events.json',
@@ -267,6 +268,7 @@
         {
             j$idEntry.val(entry.id);
             j$datepickerEntry.attr("value", entry.formattedEventDate());
+            j$datepickerEntry.val(entry.formattedEventDate());
             j$typeEntry.val(entry.eventType());
             j$nameEntry.val(entry.name());
             j$commentsEntry.val(entry.comment());
@@ -300,7 +302,7 @@
               name : j$nameEntry.val(),
               comment : j$commentsEntry.val(),
               event_type : j$typeEntry.val(),
-              event_date : railsDateFormatter(j$datepickerEntry.attr("value"))
+              event_date : railsDateFormatter(j$datepickerEntry.val())
             }
 
             j$.ajax('/users/<%= @user.id %>/events/' + editId + '.json',
