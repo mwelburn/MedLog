@@ -26,8 +26,6 @@ class User < ActiveRecord::Base
 
   validates :name, :length => { :maximum => 50 }
 
-  default_scope :order => '"users"."created_at" DESC'
-
   def self.find_for_facebook_oauth(access_token, signed_in_resource=nil)
     data = access_token.extra.raw_info
     if user = User.where(:facebook_id => data.id).first

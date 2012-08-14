@@ -10,8 +10,6 @@ class Event < ActiveRecord::Base
   validates :name, :presence => true
   validates :event_date, :presence => true
 
-  default_scope :order => '"events"."event_date" DESC, "events"."created_at" DESC'
-
   def as_json(options={})
     super(:only => [:id, :name, :event_date, :event_type, :comment, :user_id])
   end
