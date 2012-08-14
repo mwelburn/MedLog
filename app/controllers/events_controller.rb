@@ -80,7 +80,7 @@ class EventsController < ApplicationController
   def types
     #TODO - Set up the default types that have images. Don't add those values again in the iterator
     @distinct_types = [];
-    current_user.events.select("DISTINCT(event_type)").each do |event_type|
+    current_user.events.select("event_type").uniq.each do |event_type|
       @distinct_types << event_type
     end
     render :json => { :types => @distinct_types}
