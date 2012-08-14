@@ -89,6 +89,16 @@ describe User do
         user = User.new(@attr.merge(:email => "user2@example.com"))
         user.should_not be_valid
       end
+
+      it "should have email be case insensitive" do
+        pending "test login"
+        pending "test creation with same email"
+      end
+
+      it "should be username be case insensitive" do
+        pending "test login"
+        pending "test creation with same username"
+      end
     end
   end
 
