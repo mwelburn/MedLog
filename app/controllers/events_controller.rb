@@ -31,8 +31,8 @@ class EventsController < ApplicationController
 
     begin
       @event.name = req["event"]["name"] unless req["event"]["name"].nil?
-      @event.eventDate = req["event"]["eventDate"] unless req["event"]["eventDate"].nil?
-      @event.eventType = req["event"]["eventType"] unless req["event"]["eventType"].nil?
+      @event.event_date = req["event"]["event_date"] unless req["event"]["event_date"].nil?
+      @event.event_type = req["event"]["event_type"] unless req["event"]["event_type"].nil?
       @event.comment = req["event"]["comment"] unless req["event"]["comment"].nil?
 
       @event.save!
@@ -80,8 +80,8 @@ class EventsController < ApplicationController
   def types
     #TODO - Set up the default types that have images. Don't add those values again in the iterator
     @distinct_types = [];
-    current_user.events.select("DISTINCT(eventType)").each do |eventType|
-      @distinct_types << eventType
+    current_user.events.select("DISTINCT(event_type)").each do |event_type|
+      @distinct_types << event_type
     end
     render :json => { :types => @distinct_types}
   end

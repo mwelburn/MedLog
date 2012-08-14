@@ -3,21 +3,21 @@ class Event < ActiveRecord::Base
 
   belongs_to :user
 
-  attr_accessible :name, :eventDate, :eventType, :comment
+  attr_accessible :name, :event_date, :event_type, :comment
 
   validates :user_id, :presence => true
-  validates :eventType, :presence => true
+  validates :event_type, :presence => true
   validates :name, :presence => true
-  validates :eventDate, :presence => true
+  validates :event_date, :presence => true
 
-  default_scope :order => '"events"."eventDate" DESC, "events"."created_at" DESC'
+  default_scope :order => '"events"."event_date" DESC, "events"."created_at" DESC'
 
   def as_json(options={})
-    super(:only => [:id, :name, :eventDate, :eventType, :comment, :user_id])
+    super(:only => [:id, :name, :event_date, :event_type, :comment, :user_id])
   end
 
   private
     def default_values
-      self.eventDate ||= Date.today
+      self.event_date ||= Date.today
     end
 end

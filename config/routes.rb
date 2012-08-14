@@ -13,7 +13,7 @@ MedLog::Application.routes.draw do
     resources :events, :only => [ :index, :show, :update, :create, :destroy ]
   end
 
-  match 'users/:user_id/eventTypes' => 'events#types', :as => :eventTypes
+  match 'users/:user_id/event_types' => 'events#types', :as => :event_types
 
   root :to => 'home#index'
 

@@ -191,8 +191,8 @@
         var self = this;
 
         self.id = data.id;
-        self.eventType = ko.observable(data.eventType);
-        self.eventDate = ko.observable(data.eventDate);
+        self.eventType = ko.observable(data.event_type);
+        self.eventDate = ko.observable(data.event_date);
         self.formattedEventDate = ko.computed(function()
         {
             myDate = self.eventDate();
@@ -227,8 +227,8 @@
             var entry = {
               name : j$nameEntry.val(),
               comment : j$commentsEntry.val(),
-              eventType : j$typeEntry.val(),
-              eventDate : railsDateFormatter(j$datepickerEntry.attr("value"))
+              event_type : j$typeEntry.val(),
+              event_date : railsDateFormatter(j$datepickerEntry.attr("value"))
             }
 
             j$.ajax('/users/<%= @user.id %>/events.json',
@@ -299,8 +299,8 @@
             var entry = {
               name : j$nameEntry.val(),
               comment : j$commentsEntry.val(),
-              eventType : j$typeEntry.val(),
-              eventDate : railsDateFormatter(j$datepickerEntry.attr("value"))
+              event_type : j$typeEntry.val(),
+              event_date : railsDateFormatter(j$datepickerEntry.attr("value"))
             }
 
             j$.ajax('/users/<%= @user.id %>/events/' + editId + '.json',
