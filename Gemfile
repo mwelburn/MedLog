@@ -12,6 +12,7 @@ group :assets do
   gem 'coffee-rails', '~> 3.2.1'
 
   gem 'bootstrap-sass', '~> 2.0.4.0'
+# Trying out https://github.com/Aymkdn/Datepicker-for-Bootstrap instead
 #  gem 'bootstrap-datepicker-rails'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
