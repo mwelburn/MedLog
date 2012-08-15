@@ -1,8 +1,8 @@
 /* =========================================================
  * bootstrap-datepicker.js 
- * http://www.eyecon.ro/bootstrap-datepicker
+ * Original Idea: http://www.eyecon.ro/bootstrap-datepicker (Copyright 2012 Stefan Petre)
+ * Updated by AymKdn (http://kodono.info - https://github.com/Aymkdn/Datepicker-for-Bootstrap)
  * =========================================================
- * Copyright 2012 Stefan Petre
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,26 +24,24 @@
 	var Datepicker = function(element, options){
 		this.element = $(element);
 		this.format = DPGlobal.parseFormat(options.format||this.element.data('date-format')||'mm/dd/yyyy');
-		this.picker = $(DPGlobal.template)
-							.appendTo('body')
-							.on({
-								click: $.proxy(this.click, this),
-								mousedown: $.proxy(this.mousedown, this)
-							});
-		this.isInput = this.element.is('input');
+		this.picker = $(DPGlobal.template).appendTo('body').hide().on('mousedown.Datepicker',$.proxy(this.mousedown, this)).on('click.Datepicker',$.proxy(this.click, this));
+
+		this.isInput = this.element.is('input') || this.element.is('textarea');
 		this.component = this.element.is('.date') ? this.element.find('.add-on') : false;
 		
 		if (this.isInput) {
 			this.element.on({
-				focus: $.proxy(this.show, this),
-				blur: $.proxy(this.hide, this),
-				keyup: $.proxy(this.update, this)
+				"focus.Datepicker": $.proxy(this.show, this),
+				"click.Datepicker": $.proxy(this.show, this),
+				"blur.Datepicker": $.proxy(this.blur, this),
+				"keyup.Datepicker": $.proxy(this.update, this),
+				"keydow.Datepicker": $.proxy(this.keydown, this)
 			});
 		} else {
 			if (this.component){
-				this.component.on('click', $.proxy(this.show, this));
+				this.component.on('click.Datepicker', $.proxy(this.show, this));
 			} else {
-				this.element.on('click', $.proxy(this.show, this));
+				this.element.on('click.Datepicker', $.proxy(this.show, this));
 			}
 		}
 		
@@ -60,34 +58,21 @@
 		constructor: Datepicker,
 		
 		show: function(e) {
+		  $('div.datepicker.dropdown-menu').hide(); //make sure to hide all other calendars
 			this.picker.show();
 			this.height = this.component ? this.component.outerHeight() : this.element.outerHeight();
 			this.place();
-			$(window).on('resize', $.proxy(this.place, this));
-			if (e ) {
+			$(window).on('resize.Datepicker', $.proxy(this.place, this));
+			$('body').on('click.Datepicker', $.proxy(this.hide, this));
+			if (e) {
 				e.stopPropagation();
 				e.preventDefault();
 			}
 			if (!this.isInput) {
-				$(document).on('mousedown', $.proxy(this.hide, this));
+				$(document).on('mousedown.Datepicker', $.proxy(this.hide, this));
 			}
 			this.element.trigger({
 				type: 'show',
-				date: this.date
-			});
-		},
-		
-		hide: function(){
-			this.picker.hide();
-			$(window).off('resize', this.place);
-			this.viewMode = 0;
-			this.showMode();
-			if (!this.isInput) {
-				$(document).off('mousedown', this.hide);
-			}
-			this.setValue();
-			this.element.trigger({
-				type: 'hide',
 				date: this.date
 			});
 		},
@@ -113,8 +98,9 @@
 		},
 		
 		update: function(){
+		  var date = this.element.val();
 			this.date = DPGlobal.parseDate(
-				this.isInput ? this.element.prop('value') : this.element.data('date'),
+				date ? date : this.element.data('date'),
 				this.format
 			);
 			this.viewDate = new Date(this.date);
@@ -202,7 +188,24 @@
 			yearCont.html(html);
 		},
 		
-		click: function(e) {
+		blur:function(e) {
+  	},
+		
+		hide: function(e){
+  		this.picker.hide();
+			$(window).off('resize.Datepicker', this.place);
+			this.viewMode = 0;
+			this.showMode();
+			if (!this.isInput) {
+				$(document).off('mousedown.Datepicker', this.hide);
+			}
+			$('body').off('click.Datepicker',$.proxy(this.click, this));
+		},
+		click:function(e) {
+			e.stopPropagation();
+			e.preventDefault();
+		},
+		mousedown: function(e) {
 			e.stopPropagation();
 			e.preventDefault();
 			var target = $(e.target).closest('span, td, th');
@@ -253,23 +256,25 @@
 								type: 'changeDate',
 								date: this.date
 							});
+							this.hide();
 						}
 						break;
 				}
 			}
 		},
-		
-		mousedown: function(e){
-			e.stopPropagation();
-			e.preventDefault();
-		},
-		
+		keydown:function(e) {
+      var keyCode = e.keyCode || e.which; 
+      if (keyCode == 9) this.hide(); // when hiting TAB, for accessibility
+    },
+	
 		showMode: function(dir) {
 			if (dir) {
 				this.viewMode = Math.max(0, Math.min(2, this.viewMode + dir));
 			}
 			this.picker.find('>div').hide().filter('.datepicker-'+DPGlobal.modes[this.viewMode].clsName).show();
-		}
+		},
+		
+		destroy: function() { this.element.removeData("datepicker").off(".Datepicker"); this.picker.remove() }
 	};
 	
 	$.fn.datepicker = function ( option ) {
@@ -327,8 +332,10 @@
 			return {separator: separator, parts: parts};
 		},
 		parseDate: function(date, format) {
+		  var today=new Date();
+		  if (!date) date="";
 			var parts = date.split(format.separator),
-				date = new Date(1970, 1, 1, 0, 0, 0),
+				date = new Date(today.getFullYear(),today.getMonth(),today.getDate(),0,0,0),
 				val;
 			if (parts.length == format.parts.length) {
 				for (var i=0, cnt = format.parts.length; i < cnt; i++) {
