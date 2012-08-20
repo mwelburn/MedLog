@@ -26,10 +26,57 @@
             </li>
           </ul>
         <% else %>
-          <%= link_to "Sign Up", new_user_registration_path, :class => "btn" %>
-          <%= link_to "Login", new_user_session_path, :class => "btn btn-primary" %>
+          <%= link_to "", user_omniauth_authorize_path(:facebook), :class => "facebook-login" %>
+          <%= link_to "", user_omniauth_authorize_path(:twitter), :class => "twitter-login" %>
+          <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+            Login
+            <span class="caret"></span>
+          </a>
+          <ul id="dropdown-login" class="dropdown-menu" style="padding: 5px 10px 0px 10px;">
+            <%= form_for("user", :url => user_session_path) do |f| %>
+            <li>
+              <div class="control-group">
+                <%= f.label :login, :class => "control-label" %>
+                <div class="controls">
+                  <%= f.text_field :login %>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="control-group">
+                <%= f.label :password, :class => "control-label" %>
+                <div class="controls">
+                  <%= f.password_field :password %>
+                </div>
+              </div>
+            </li>
+            <li>
+                <div class="control-group">
+                  <%= f.label :remember_me, :class => "control-label" %>
+                  <div class="controls">
+                    <%= f.check_box :remember_me %>
+                  </div>
+                </div>
+            </li>
+            <li>
+              <%= f.submit "Sign in", :class => "btn btn-primary" %>
+            </li>
+            <% end %>
+          </ul>
         <% end %>
       </ul>
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+    var j$ = jQuery.noConflict();
+
+    j$(function() {
+
+      // Prevent closing the sign in form on click
+      j$('#dropdown-login').click(function(e) {
+        e.stopPropagation();
+      });
+    });
+</script>
