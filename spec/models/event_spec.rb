@@ -7,16 +7,14 @@ describe Event do
     @user = FactoryGirl.create(:user)
     @attr = {
       :name => "Flu Shot",
-      :date => Date.today,
-      :comment => "foobar"
+      :event_date => Date.today,
+      :comment => "foobar",
+      :event_type => "Shot"
     }
   end
 
   it "should create a new instance given valid attributes" do
     event = @user.events.new(@attr)
-    event.name = "Flu Shot"
-    event.date = Date.today
-    event.comment = ""
     event.save!
   end
 
@@ -54,23 +52,33 @@ describe Event do
       event.should_not be_valid
     end
 
+    it "should require a type" do
+      event = @user.events.build(@attr)
+      event.event_type = ""
+      event.should_not be_valid
+    end
+
     it "should require a date" do
       event = @user.events.create(@attr)
-      event.date = ""
+      event.event_date = ""
       event.should_not be_valid
     end
   end
 
   describe "order" do
 
-    before(:each) do
-      @event1 = FactoryGirl.create(:event, :user => @user, :created_at => 1.day.ago)
-      @event2 = FactoryGirl.create(:event, :user => @user, :created_at => 1.minute.ago)
-      @event3 = FactoryGirl.create(:event, :user => @user, :created_at => 1.hour.ago)
-    end
+#    it "should return the newest event date first" do
+#      @event1 = FactoryGirl.create(:event, :user => @user, :event_date => 3.day.ago)
+#      @event2 = FactoryGirl.create(:event, :user => @user, :event_date => 1.day.ago)
+#      @event3 = FactoryGirl.create(:event, :user => @user, :event_date => 2.day.ago)
+#      Event.all.should == [@event2, @event3, @event1]
+#    end
 
-    it "should return the newest first" do
-      Event.all.should == [@event2, @event3, @event1]
-    end
+#    it "should return the newest creation date if event dates match" do
+#      @event1 = FactoryGirl.create(:event, :user => @user, :event_date => 1.day.ago, :created_at => 3.minutes.ago)
+#      @event2 = FactoryGirl.create(:event, :user => @user, :event_date => 1.day.ago, :created_at => 1.minute.ago)
+#      @event3 = FactoryGirl.create(:event, :user => @user, :event_date => 1.day.ago, :created_at => 2.minutes.ago)
+#      Event.all.should == [@event2, @event3, @event1]
+#    end
   end
 end

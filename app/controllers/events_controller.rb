@@ -4,30 +4,50 @@ class EventsController < ApplicationController
   before_filter :load_event, :only => [:show, :update, :destroy]
 
   def index
-    #TODO - this should be admin only, but should it even exist?
-    @events = @user.events.all
-    respond_to do |format|
-      format.html { redirect_to @user }
-      format.json { render :json => @events }
+    #TODO - only can see other people's events if they give access
+    if !current_user?(@user)
+      respond_to do |format|
+        format.html { redirect_to error_path, :flash => { :failure => "No permission to view this user's events"} }
+        format.json { render :json => { :errors => ["No permission to view this user's events"] }, :status => 422 }
+      end
+    else
+      @events = @user.events.all
+      respond_to do |format|
+        format.html { redirect_to @user }
+        format.json { render :json => @events }
+      end
     end
   end
 
   def show
-    #TODO - is the HTML version even needed?
-    @events = @user.events.all
+    #TODO - only can see other people's events if they give access
+    if !current_user?(@user)
+      render :json => { :errors => ["No permission to view this event"] }, :status => 422
+    end
+
+    if @event.nil?
+      render :json => { :errors => ["Event does not exist."] }, :status => 422
+    end
+
     respond_to do |format|
-      format.html
+      #TODO - is the HTML version even needed?
+      #format.html
       format.json { render :json => { :user => @user, :event => @events } }
     end
   end
 
   def update
-    req = ActiveSupport::JSON.decode(request.body)
-    @event = current_user.events.find_by_id(params[:id])
+    if !current_user?(@user)
+      render :json => { :errors => ["No permission to update this event"] }, :status => 422
+    end
+
+    @event = @user.events.find_by_id(params[:id])
 
     if @event.nil?
-      render :json => { :errors => ["Event does not exist."] }, :status => 422
+      render :json => { :errors => ["Event does not exist"] }, :status => 422
     end
+
+    req = ActiveSupport::JSON.decode(request.body)
 
     begin
       @event.name = req["event"]["name"] unless req["event"]["name"].nil?
@@ -44,9 +64,12 @@ class EventsController < ApplicationController
 
 
   def create
-    #TODO - need to accept only json and return json
+    if !current_user?(@user)
+      render :json => { :errors => ["No permission to create this user's events"] }, :status => 422
+    end
+
     req = ActiveSupport::JSON.decode(request.body)
-    @event = current_user.events.build(req["event"])
+    @event = @user.events.build(req["event"])
 
     begin
       @event.save!
@@ -57,14 +80,17 @@ class EventsController < ApplicationController
   end
 
   def destroy
-    @event = current_user.events.find_by_id(params[:id])
+    if !current_user?(@user)
+      render :json => { :errors => ["No permission to delete this event"] }, :status => 422
+    end
+
+    @event = @user.events.find_by_id(params[:id])
 
     if @event.nil?
-      render :json => { :errors => ["Event does not exist."] }, :status => 422
+      render :json => { :errors => ["Event does not exist"] }, :status => 422
     end
 
     begin
-      #TODO - delete or destroy?
       @event.destroy
       #TODO - what is the right status?
       render :json => { :status => 200 }
@@ -89,6 +115,7 @@ class EventsController < ApplicationController
   private
     def load_user
       begin
+        #TODO - allow an admin to see any user
         @user = User.find(params[:user_id])
       rescue
         respond_to do |format|
@@ -101,7 +128,7 @@ class EventsController < ApplicationController
     def load_event
       begin
         #TODO - allow an admin to see any event
-        @event = current_user.events.find(params[:id])
+        @event = @user.events.find(params[:id])
       rescue
         respond_to do |format|
           format.html { redirect_to error_path, :flash => { :failure => "Event does not exist" } }
@@ -109,5 +136,15 @@ class EventsController < ApplicationController
           format.json { render :json => {:errors => ["Event does not exist"] }, :status => 422 }
         end
       end
+    end
+
+    def can_see_event?(user)
+      #TODO - sharing rules
+      !current_user?(@user)
+    end
+
+    def can_see_user?(user)
+      #TODO - sharing rules
+      !current_user?(@user)
     end
 end

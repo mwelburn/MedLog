@@ -16,6 +16,6 @@ class Event < ActiveRecord::Base
 
   private
     def default_values
-      self.event_date ||= Date.today
+#      self.event_date ||= Date.today
     end
 end

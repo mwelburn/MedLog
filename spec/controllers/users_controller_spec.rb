@@ -40,13 +40,9 @@ describe UsersController do
 
         it "should deny access" do
           get :show, :id => @user, :format => :json
-          response.should be_success
-          body = JSON.parse(response.body)
-          body.should include('errors')
-          errors = body['errors']
-          errors.should have(1).items
-          #TODO - keep testing
-          pending
+          response.should_not be_success
+          expected_body = { "errors" => [ "User does not exist" ] }
+          JSON.parse(response.body).should == expected_body
         end
       end
     end
@@ -68,42 +64,33 @@ describe UsersController do
 
         it "should have the right title" do
           get :show, :user_id => @user
-          response.should have_selector('title', :content => "All events")
+          response.should have_selector('title', :content => "My Events")
         end
 
         it "should have an element for each user's event" do
           get :show, :user_id => @user
-          @user.events.each do |event|
-            response.should have_selector('li', :content => event.name)
-          end
+          pending
         end
 
         #this test requires the event's not have the same name
         it "should not contain other user's events" do
           get :show, :user_id => @user
-          @other_user.events.each do |event|
-            response.should_not have_selector('li', :content => event.name)
-          end
+          pending
         end
 
-        #TODO - find a pagination gem that works in 3.1
-        it "should respond to scrolling down the page" do
+        it "should respond to  infinity scrolling" do
+          get :show, :user_id => @user
           pending
-      #      get :show, :user_id => @user
-      #      response.should have_selector('div.pagination')
-      #      response.should have_selector('span.disabled', :content => "Previous")
-      #      response.should have_selector('a', :href => "/events?page=2",
-      #                                         :content => "2")
-      #      response.should have_selector('a', :href => "/events?page=2",
-      #                                         :content => "Next")
         end
 
         it "should have delete links" do
           get :show, :user_id => @user
-          @user.events.each do |event|
-            response.should have_selector('a', :href => event_path(event),
-                                               :content => "delete")
-          end
+          pending
+        end
+
+        it "should have edit links" do
+          get :show, :user_id => @user
+          pending
         end
 
         it "should have a link to create a new event" do
@@ -111,11 +98,22 @@ describe UsersController do
           response.should have_selector('a', :href => new_event_path,
                                              :content => "New Event?")
         end
+
+        it "should show a picture of the type of event" do
+          get :show, :user_id => @user
+          pending
+        end
       end
 
       describe "failure" do
 
-        it "should display an error page" do
+        it "should not allow access to another user" do
+          get :show, :user_id => @other_user
+          pending
+        end
+
+        it "should redirect to an error page" do
+          get :show, :user_id => @other_user
           pending
         end
       end

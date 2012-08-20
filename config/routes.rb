@@ -4,7 +4,7 @@ MedLog::Application.routes.draw do
     get '/users/auth/:provider' => 'users/omniauth_callbacks#passthru'
   end
 
-  resources :users, :only => [ :index, :show ] do
+  resources :users, :only => [ :show ] do
     member do
 #      get 'fingers'
 #      post 'fingers' => 'users#update_fingers'

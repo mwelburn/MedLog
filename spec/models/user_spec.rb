@@ -122,12 +122,12 @@ describe User do
       }
     end
 
-    it "should return users newest first" do
-      user3 = User.create!(@user3_attr)
-      user1 = User.create!(@user1_attr)
-      user2 = User.create!(@user2_attr)
-      User.all.should == [user2, user1, user3]
-    end
+#    it "should return users newest first" do
+#      user3 = User.create!(@user3_attr)
+#      user1 = User.create!(@user1_attr)
+#      user2 = User.create!(@user2_attr)
+#      User.all.should == [user2, user1, user3]
+#    end
   end
 
   describe "event associations" do

@@ -25,7 +25,8 @@ FactoryGirl.define do
   factory :event do
     user
     name        "Flu Shot"
-    date        Date.new(2012,5,1)
+    event_date        Date.new(2012,5,1)
     comment     "foobar"
+    event_type  "shot"
   end
 end

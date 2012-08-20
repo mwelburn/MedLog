@@ -48,7 +48,16 @@ describe EventsController do
     end
 
     describe "failure" do
-      pending "test failure to access other user (should be in user controller test)"
+
+      it "should fail to access another user's events" do
+        get :index, :user_id => @other_user
+        response.should_not be_success
+      end
+
+      it "should redirect to an error page" do
+        get :index, :user_id => @other_user
+        response.should redirect_to(error_path)
+      end
     end
   end
 
@@ -63,7 +72,8 @@ describe EventsController do
       before(:each) do
         @attr = {
           :name => "Test Name",
-          :date => Time.now,
+          :event_date => Time.now,
+          :event_type => "Test Type",
           :comment => "Test Comment"
         }
       end
@@ -241,7 +251,8 @@ describe EventsController do
       @event = FactoryGirl.create(:event, :user => @user)
       @attr = {
           :name => "Updated Name",
-          :date => Time.now,
+          :event_date => Time.now,
+          :event_type => "Updated Type",
           :comment => "Updated comment"
       }
     end
@@ -257,7 +268,8 @@ describe EventsController do
         put :update, :id => @event, :user_id => @user, :event => @attr
         @event.reload
         @event.name.should_not == @attr[:name]
-        @event.date.should_not == @attr[:date]
+        @event.event_date.should_not == @attr[:event_date]
+        @event.event_type.should_not == @attr[:event_type]
         @event.comment.should_not == @attr[:comment]
       end
 
@@ -279,7 +291,8 @@ describe EventsController do
           put :update, :id => @event, :user_id => @user, :event => @attr
           @event.reload
           @event.name.should == @attr[:name]
-          @event.date.should == @attr[:date]
+          @event.event_date.should == @attr[:event_date]
+          @event.event_type.should == @attr[:event_type]
           @event.comment.should == @attr[:comment]
         end
 
@@ -288,7 +301,7 @@ describe EventsController do
           flash[:success].should =~ /event updated/i
         end
 
-        it "should only update attributes that are part of the request"
+        it "should only update attributes that are part of the request" do
           pending
         end
       end
@@ -298,7 +311,8 @@ describe EventsController do
         before(:each) do
           @bad_attr = {
               :name => "",
-              :date => Time.now,
+              :event_date => Time.now,
+              :event_type => "",
               :comment => ""
           }
         end
@@ -312,7 +326,8 @@ describe EventsController do
           put :update, :id => @event, :user_id => @user, :event => @bad_attr
           @event.reload
           @event.name.should_not == @bad_attr[:name]
-          @event.date.should_not == @bad_attr[:date]
+          @event.event_date.should_not == @bad_attr[:event_date]
+          @event.event_type.should_not == @bad_attr[:event_type]
           @event.comment.should_not == @bad_attr[:comment]
         end
 
