@@ -69,9 +69,6 @@ class EventsController < ApplicationController
     end
 
     req = ActiveSupport::JSON.decode(request.body)
-    logger.info(@user)
-    logger.info(req)
-    logger.info(@user.events)
     @event = @user.events.build(req["event"])
 
     begin
