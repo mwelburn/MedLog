@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :load_user, :only => [:index, :show]
+  before_filter :load_user
   before_filter :load_event, :only => [:show, :update, :destroy]
 
   def index
@@ -69,6 +69,9 @@ class EventsController < ApplicationController
     end
 
     req = ActiveSupport::JSON.decode(request.body)
+    logger.info(@user)
+    logger.info(req)
+    logger.info(@user.events)
     @event = @user.events.build(req["event"])
 
     begin

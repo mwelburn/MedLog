@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
       user
     else # Create a user with a stub password.
       #TODO - make sure to handle username not existing (does it exist in the data?)
-      sanitized_username = data.username.gsub(/[^0-9a-z]/i, '')
+      sanitized_username = data.username.gsub(/[^0-9a-z_]/i, '')
       user = User.new(:email => data.email, :name => data.name, :username => sanitized_username, :password => Devise.friendly_token[0,20])
       user.facebook_id = data.id
       begin
