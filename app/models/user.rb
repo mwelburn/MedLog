@@ -26,17 +26,19 @@ class User < ActiveRecord::Base
 
   validates :name, :length => { :maximum => 50 }
 
+  validates :facebook_id, :uniqueness => { :allow_nil => true, :allow_blank => true }
+  validates :twitter_id, :uniqueness => { :allow_nil => true, :allow_blank => true }
+
   def self.find_for_facebook_oauth(access_token, signed_in_resource=nil)
     data = access_token.extra.raw_info
     if user = User.where(:facebook_id => data.id).first
       user
     else # Create a user with a stub password.
-      #TODO - make sure to handle username not existing (does it exist in the data?)
-      sanitized_username = data.username.gsub(/[^0-9a-z_]/i, '')
-      user = User.new(:email => data.email, :name => data.name, :username => sanitized_username, :password => Devise.friendly_token[0,20])
+      #TODO - is the following even necessary since we are updating the data in new_with_session?
+      user = User.new(:email => data.email, :name => data.name, :username => data.username.gsub(/[^0-9a-z_]/i, ''), :password => Devise.friendly_token[0,20])
       user.facebook_id = data.id
       begin
-        user.save!
+#        user.save!
         #TODO - handle return of false..when would that happen
       rescue
         #TODO - redirect to 500 page
@@ -47,15 +49,15 @@ class User < ActiveRecord::Base
 
   def self.find_for_twitter_oauth(access_token, signed_in_resource=nil)
     data = access_token
+    logger.info(data)
     if user = User.where(:twitter_id => data.uid).first
       user
     else # Create a user with a stub password.
-      logger.debug data
-      #TODO - need to have a followup page that asks for an email?
+      #TODO - is the following even necessary since we are updating the data in new_with_session?
       user = User.new(:name => data.info.name, :username => data.info.nickname, :password => Devise.friendly_token[0,20])
-      user.twitter_id = data.id
+      user.twitter_id = data.uid
       begin
-        user.save!
+#        user.save!
         #TODO - handle return of false..when would that happen
       rescue
         #TODO - redirect to 500 page
@@ -67,11 +69,16 @@ class User < ActiveRecord::Base
   def self.new_with_session(params, session)
     super.tap do |user|
       if data = session["devise.facebook_data"] && session["devise.facebook_data"]["extra"]["raw_info"]
-        #Currently do nothing. Maybe in the future we can keep information up to date (email,name,username/vanity)
-        #assume whatever they start with, they might modify here to customize and we don't want to overwrite
+        user.name = data[:name] if user.name.blank?
+        user.email = data[:email] if user.email.blank?
+        user.username = data[:username].gsub(/[^0-9a-z_]/i, '') if user.username.blank?
+        user.facebook_id = data[:id] if user.facebook_id.blank?
+        #TODO - clear out session variable?
       elsif data = session["devise.twitter_data"]
-        #Currently do nothing. Maybe in the future we can keep information up to date (email,username)
-        #assume whatever they start with, they might modify here to customize and we don't want to overwrite
+        user.name = data.info[:name] if user.name.blank?
+        user.username = data.info[:nickname] if user.username.blank?
+        user.twitter_id = data[:uid] if user.twitter_id.blank?
+        #TODO - clear out session variable?
       end
     end
   end
