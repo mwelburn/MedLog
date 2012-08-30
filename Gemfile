@@ -11,7 +11,8 @@ group :assets do
   gem 'sass-rails',   '~> 3.2.5'
   gem 'coffee-rails', '~> 3.2.1'
 
-  gem 'bootstrap-sass', '~> 2.0.4.0'
+# Commenting out until 2.1 is released
+#  gem 'bootstrap-sass', '~> 2.1'
 # Trying out https://github.com/Aymkdn/Datepicker-for-Bootstrap instead
 #  gem 'bootstrap-datepicker-rails'
 

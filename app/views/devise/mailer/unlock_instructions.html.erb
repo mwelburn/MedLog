@@ -1,5 +1,7 @@
 <div class="row-fluid">
-  <div class="span4 offset4">
+  <div class="span3"></div>
+  <!-- because offset isn't working for fluid -->
+  <div class="span6 offset3">
     <p>Hello <%= @resource.email %>!</p>
 
     <p>Your account has been locked due to an excessive amount of unsuccessful sign in attempts.</p>

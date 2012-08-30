@@ -1,5 +1,7 @@
 <div class="row-fluid">
-  <div class="span4 offset4">
+  <div class="span3"></div>
+  <!-- because offset isn't working for fluid -->
+  <div class="span6 offset3">
     <h2>Edit <%= resource_name.to_s.humanize %></h2>
 
     <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :class => "form-horizontal", :method => :put }) do |f| %>
@@ -63,6 +65,6 @@
 
     <p>Unhappy? <%= link_to "Cancel my account", registration_path(resource_name), :confirm => "Are you sure?", :method => :delete %>.</p>
 
-    <%= link_to "Back", :back %>
+    <!-- <%= link_to "Back", :back %> -->
   </div>
 </div>

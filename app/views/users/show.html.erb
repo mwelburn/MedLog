@@ -1,5 +1,7 @@
 <div class="row-fluid">
-  <div class="span8 offset2">
+  <div class="span2"></div>
+  <!-- offset2 isn't working for responsive... -->
+  <div class="span8">
     <a class="btn" id="new-event-btn" title="New Event" alt="New Event" href="#new_modal" data-toggle="modal">New Event</a>
 
     <ul class="feed-events" data-bind="foreach: entries">
@@ -79,6 +81,7 @@
 
 <script type="text/javascript">
   var j$ = jQuery.noConflict();
+  var fevm;
 
   var todaysDate = function()
   {
@@ -319,7 +322,7 @@
 
                     //remove old value, add the updated value
                     self.entries.remove(function(event) { return event.id == editId });
-                    self.entries.push( new FeedEntry(entry) );
+                    self.entries.push( new FeedEntry(result) );
 
                     //resort
                     self.entries.sort( sortFunction );
@@ -449,7 +452,7 @@
           resetForm();
       });
 
-      var fevm = new FeedEntryViewModel();
+      fevm = new FeedEntryViewModel();
       ko.applyBindings(fevm);
   });
 </script>
