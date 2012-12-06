@@ -16,3 +16,4 @@
 //= require bootstrap-datepicker
 //= require knockout-2.1.0
 //= require_tree .
+//= require_self

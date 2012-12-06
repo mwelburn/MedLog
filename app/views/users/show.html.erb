@@ -1,7 +1,14 @@
 <div class="row-fluid">
-  <div class="span8 offset2">
-    <a class="btn" id="new-event-btn" title="New Event" alt="New Event" href="#new_modal" data-toggle="modal">New Event</a>
-
+  <div class="span3 offset1">
+    <div class="input-append sidebar-section">
+      <input type="text" class="span8" data-bind="value: query, valueUpdate: 'keyup'"/>
+      <button type="button" class="btn">Search</button>
+    </div>
+  </div>
+  <div class="span6">
+    <div class="sidebar-section">
+      <button type="button" class="btn btn-large btn-primary" id="new-event-btn" title="New Event" alt="New Event" href="#new_modal" data-toggle="modal">New Event</button>
+    </div>
     <ul class="feed-events" data-bind="foreach: entries">
       <li>
         <a class="feed-event-image" alt="Event Type Image" title="Event Type Image"></a>
@@ -20,65 +27,88 @@
         <div style="clear: both;"></div>
       </li>
     </ul>
+  </div>
+</div>
 
-    <div class="modal fade" id="new_modal">
-      <div class="modal-header">
-        <a class="close" data-dismiss="modal">&times;</a>
-        <h3>New Event</h3>
-      </div>
-      <div class="modal-body">
-        <span id="new-error-messages"></span>
-        <div>
-          <input id="id-entry" type="hidden"/>
-          <label for="type-entry">Type:</label>
-          <input id="type-entry" type="text" data-provide="typeahead" title="Type" alt="Type"/>
-          <label for="name-entry">Name:</label>
-          <input id="name-entry" type="text" title="Caption" alt="Caption"/>
-          <label for="comments-entry">Comments:</label>
-          <textarea id="comments-entry" class="comments-textarea" title="Comments" alt="Comments"></textarea>
-          <label for="datepicker-entry">Date (mm/dd/yyyy):</label>
-          <input id="datepicker-entry" type="text">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <a href="#" id="btn-add-cancel" class="btn" data-dismiss="modal">Cancel</a>
-        <a href="#" id="btn-add-entry" class="btn btn-primary" data-bind="click: submitUpdate">Save Changes</a>
-      </div>
-    </div>
+<div class="modal fade" id="new_modal">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">&times;</a>
+    <h3>New Event</h3>
+  </div>
+  <div class="modal-body">
+    <span id="new-error-messages"></span>
 
-    <div class="modal fade" id="delete_modal">
-      <div class="modal-header">
-        <a class="close" data-dismiss="modal">&times;</a>
-        <h3>Delete Event</h3>
-      </div>
-      <div class="modal-body">
-        <h3>Are you sure you want to delete this event?</h3>
-        <br/>
-        <div>
-            <input id="id-delete" type="hidden"/>
-            <label for="type-delete">Type:</label>
-            <input id="type-delete" type="text" readonly></input>
-            <label for="name-delete">Name:</label>
-            <input id="name-delete" type="text" readonly></input>
-            <label for="comments-delete">Comments:</label>
-            <textarea id="comments-delete" class="comments-textarea" readonly></textarea>
-            <label for="date-delete">Date:</label>
-            <input id="date-delete" type="text" readonly></input>
+    <input id="id-entry" type="hidden"/>
+    <form class="form-horizontal">
+      <fieldset>
+        <div class="control-group">
+          <label for="type-entry" class="control-label">Type:</label>
+          <div class="controls">
+            <input id="type-entry" class="edit-input" type="text" size="30" data-provide="typeahead" title="Type" alt="Type"/>
+          </div>
         </div>
-        <div>
-            <span id="delete-error-messages"></span>
+
+        <div id="name-control-group" class="control-group">
+          <label for="name-entry" class="control-label">Name <strong>(Required)</strong>:</label>
+          <div class="controls">
+            <input id="name-entry" class="edit-input" type="text" size="30" title="Caption" alt="Caption"/>
+          </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <a href="#" id="btn-delete-cancel" class="btn" data-dismiss="modal">No</a>
-        <a href="#" id="btn-delete-entry" class="btn btn-primary" data-bind="click: deleteEntry">Yes</a>
-      </div>
+
+        <div class="control-group">
+          <label for="comments-entry" class="control-label">Comments:</label>
+          <div class="controls">
+            <textarea id="comments-entry" class="comments-textarea edit-input" cols="40" title="Comments" alt="Comments"></textarea>
+          </div>
+        </div>
+
+        <div id="datepicker-control-group" class="control-group">
+          <label for="datepicker-entry" class="control-label">Date <strong>(Required)</strong>:</label>
+          <div class="controls">
+            <input id="datepicker-entry" class="edit-input" type="text">
+            <br/>
+            <span class="help-inline">Please use format mm/dd/yyyy</span>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="btn-add-cancel" class="btn" data-dismiss="modal">Cancel</button>
+    <button type="button" id="btn-add-entry" class="btn btn-primary" data-bind="click: submitUpdate">Save Changes</button>
+  </div>
+</div>
+
+<div class="modal fade" id="delete_modal">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">&times;</a>
+    <h3>Delete Event</h3>
+  </div>
+  <div class="modal-body">
+    <h3>Are you sure you want to delete this event?</h3>
+    <br/>
+    <div>
+      <input id="id-delete" type="hidden"/>
+      <label for="type-delete">Type:</label>
+      <input id="type-delete" type="text" readonly></input>
+      <label for="name-delete">Name:</label>
+      <input id="name-delete" type="text" readonly></input>
+      <label for="comments-delete">Comments:</label>
+      <textarea id="comments-delete" class="comments-textarea" readonly></textarea>
+      <label for="date-delete">Date:</label>
+      <input id="date-delete" type="text" readonly></input>
     </div>
+    <div>
+        <span id="delete-error-messages"></span>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="btn-delete-cancel" class="btn" data-dismiss="modal">No</button>
+    <button type="button" id="btn-delete-entry" class="btn btn-primary" data-bind="click: deleteEntry">Yes</button>
   </div>
 </div>
 
 <script type="text/javascript">
-  var j$ = jQuery.noConflict();
   var fevm;
 
   var todaysDate = function()
@@ -121,336 +151,416 @@
 
   j$(document).ready(function()
   {
-      var dateFormat = 'mm/dd/yyyy';
+    var dateFormat = 'mm/dd/yyyy';
 
-      var j$datepickerEntry = j$('#datepicker-entry');
-      var j$newErrorMessages = j$('#new-error-messages');
-      var j$deleteErrorMessages = j$('#delete-error-messages');
-      var j$btnAddCancel = j$('#btn-add-cancel');
-      var j$btnDeleteCancel = j$('#btn-delete-cancel');
+    var j$datepickerEntry = j$('#datepicker-entry');
+    var j$newErrorMessages = j$('#new-error-messages');
+    var j$deleteErrorMessages = j$('#delete-error-messages');
+    var j$btnAddCancel = j$('#btn-add-cancel');
+    var j$btnDeleteCancel = j$('#btn-delete-cancel');
 
-      var j$idDelete = j$("#id-delete");
-      var j$typeDelete = j$('#type-delete');
-      var j$nameDelete = j$('#name-delete');
-      var j$commentsDelete = j$("#comments-delete");
-      var j$dateDelete = j$("#date-delete");
+    var j$idDelete = j$("#id-delete");
+    var j$typeDelete = j$('#type-delete');
+    var j$nameDelete = j$('#name-delete');
+    var j$commentsDelete = j$("#comments-delete");
+    var j$dateDelete = j$("#date-delete");
 
-      var j$idEntry = j$("#id-entry");
-      var j$typeEntry = j$('#type-entry');
-      var j$nameEntry = j$('#name-entry');
-      var j$commentsEntry = j$("#comments-entry");
+    var j$idEntry = j$("#id-entry");
+    var j$typeEntry = j$('#type-entry');
+    var j$nameEntry = j$('#name-entry');
+    var j$commentsEntry = j$("#comments-entry");
 
-      var j$newEventBtn = j$("#new-event-btn");
+    var j$newEventBtn = j$("#new-event-btn");
+    var j$addEntryBtn = j$("#btn-add-entry");
+    var j$editInput = j$(".edit-input");
 
-      j$datepickerEntry.attr('data-date-format', dateFormat);
-      j$datepickerEntry.datepicker(
+    var j$datepickerControlGroup = j$('#datepicker-control-group');
+    var j$nameControlGroup = j$('#name-control-group');
+
+    j$datepickerEntry.attr('data-date-format', dateFormat);
+    j$datepickerEntry.datepicker(
+    {
+      format: dateFormat,
+      autoclose: true
+    });
+
+    var validateForm = function()
+    {
+      var valid = true;
+
+      //validate the formatting is right
+      var dateValue = j$datepickerEntry.val();
+      if (!dateValue.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/))
       {
-        format: dateFormat,
-        autoclose: true
+        valid = false;
+        j$datepickerControlGroup.addClass('error');
+      }
+      else
+      {
+        j$datepickerControlGroup.removeClass('error');
+      }
+
+      //validate a name exists
+      if (j$nameEntry.val() == null || j$nameEntry.val() == '')
+      {
+        valid = false;
+        j$nameControlGroup.addClass('error');
+      }
+      else
+      {
+        j$nameControlGroup.removeClass('error');
+      }
+
+      if (valid)
+      {
+        j$addEntryBtn.removeClass('disabled');
+      }
+      else
+      {
+        j$addEntryBtn.addClass('disabled');
+      }
+    };
+
+    j$editInput.blur(function(e)
+    {
+      validateForm();
+    });
+
+    j$btnAddCancel.click(function()
+    {
+      resetForm();
+      clearErrors();
+    });
+
+    j$btnDeleteCancel.click(function()
+    {
+      clearErrors();
+    });
+
+    var clearErrors = function()
+    {
+      j$datepickerControlGroup.removeClass('error');
+      j$nameControlGroup.removeClass('error');
+      j$addEntryBtn.removeClass('disabled');
+
+      j$newErrorMessages.html("");
+      j$deleteErrorMessages.html("");
+    }
+
+    var resetForm = function()
+    {
+      j$idEntry.val("");
+      j$datepickerEntry.attr('');
+      j$datepickerEntry.val('')
+      //j$datepickerEntry.attr("value", todaysDate());
+      //j$datepickerEntry.val(todaysDate())
+      j$typeEntry.val("");
+      j$nameEntry.val("");
+      j$commentsEntry.val("");
+
+      j$addEntryBtn.addClass('disabled');
+    }
+
+    var sortFunction = function(a, b)
+    {
+      if (a.eventDate() != b.eventDate())
+      {
+        return a.eventDate() > b.eventDate() ? -1 : 1;
+      }
+      else
+      {
+        return a.created_at > b.created_at ? -1 : 1;
+      }
+    }
+
+    var FeedEntry = function(data)
+    {
+      var self = this;
+
+      self.id = data.id;
+      self.eventType = ko.observable(data.event_type);
+      self.eventDate = ko.observable(data.event_date);
+      self.formattedEventDate = ko.computed(function()
+      {
+        myDate = self.eventDate();
+        var yyyy = myDate.split("-")[0];
+        var mm = myDate.split("-")[1];
+        var dd = myDate.split("-")[2];
+
+        return mm + "/" + dd + "/" + yyyy;
       });
-
-      j$btnAddCancel.click(function()
+      self.prettyEventDate = ko.computed(function()
       {
-        resetForm();
-        clearErrors();
+        //TODO - print format for the feed i.e. January 3rd, 2011
+        return self.formattedEventDate();
       });
+      self.name = ko.observable(data.name);
+      self.comment = ko.observable(data.comment);
+      self.created_at = data.created_at;
+    }
 
-      j$btnDeleteCancel.click(function()
-      {
-        clearErrors();
-      });
-
-      var clearErrors = function()
-      {
-        j$newErrorMessages.html("");
-        j$deleteErrorMessages.html("");
-      }
-
-      var resetForm = function()
-      {
-          j$idEntry.val("");
-          j$datepickerEntry.attr('');
-          j$datepickerEntry.val('')
-          //j$datepickerEntry.attr("value", todaysDate());
-          //j$datepickerEntry.val(todaysDate())
-          j$typeEntry.val("");
-          j$nameEntry.val("");
-          j$commentsEntry.val("");
-      }
-
-      var sortFunction = function(a, b)
-      {
-          if (a.eventDate() != b.eventDate())
-          {
-              return a.eventDate() > b.eventDate() ? -1 : 1;
-          }
-          else
-          {
-              return a.created_at > b.created_at ? -1 : 1;
-          }
-      }
-
-      var FeedEntry = function(data)
-      {
-        var self = this;
-
-        self.id = data.id;
-        self.eventType = ko.observable(data.event_type);
-        self.eventDate = ko.observable(data.event_date);
-        self.formattedEventDate = ko.computed(function()
-        {
-            myDate = self.eventDate();
-            var yyyy = myDate.split("-")[0];
-            var mm = myDate.split("-")[1];
-            var dd = myDate.split("-")[2];
-
-            return mm + "/" + dd + "/" + yyyy;
-        });
-        self.prettyEventDate = ko.computed(function()
-        {
-            //TODO - print format for the feed i.e. January 3rd, 2011
-            return self.formattedEventDate();
-        });
-        self.name = ko.observable(data.name);
-        self.comment = ko.observable(data.comment);
-        self.created_at = data.created_at;
-      }
-
-      var FeedEntryViewModel = function()
-      {
-        var self = this;
-        self.entries = ko.observableArray([]);
+    var FeedEntryViewModel = function()
+    {
+      var self = this;
+      self.query = ko.observable('');
+      self.entries = ko.observableArray([]);
 //        self.entries.sort( sortFunction );
 
-        //TODO - should eventTypes be a ko.computed? Would that mess up if we use infinity scrolling
+      self.search = function(value)
+      {
+        FeedEntryViewModel.entries.removeAll();
 
-        self.addEntry = function()
+        for (var entry in entries)
         {
-            //TODO - client side validation before submitting
+          if (entries[entry].name.toLowerCase().indexOf(value.toLowerCase()) >= 0)
+          {
+            FeedEntryViewModel.entries.push(entries[entry]);
+          }
+        }
+      };
 
-            var entry = {
-              name : j$nameEntry.val(),
-              comment : j$commentsEntry.val(),
-              event_type : j$typeEntry.val(),
-              event_date : railsDateFormatter(j$datepickerEntry.val())
-            }
+      //TODO - should eventTypes be a ko.computed? Would that mess up if we use infinity scrolling
 
-            j$.ajax('/users/<%= @user.id %>/events.json',
-            {
-                type: "post",
-                contentType: "json",
-                data: JSON.stringify({"event": entry}),
-                success: function(result)
-                {
-                    console.log("Success");
-                    console.log(result);
+      self.addEntry = function()
+      {
+        //TODO - client side validation before submitting
 
-                    self.entries.push( new FeedEntry(result) );
-                    //resort
-                    self.entries.sort( sortFunction );
-
-                    j$("#new_modal").modal('hide');
-
-                    resetForm();
-                    clearErrors();
-                },
-                error: function(result)
-                {
-                    console.log("Failure");
-                    console.log(result);
-
-                    //TODO - display error messages
-                    var errorArray = JSON.parse(result.responseText)["errors"];
-                    var errorString = buildErrorMessage(errorArray);
-                    j$('#new-error-messages').html(errorString);
-                }
-            });
-        };
-
-        self.initEdit = function(entry)
-        {
-            j$idEntry.val(entry.id);
-            j$datepickerEntry.attr("value", entry.formattedEventDate());
-            j$datepickerEntry.val(entry.formattedEventDate());
-            j$typeEntry.val(entry.eventType());
-            j$nameEntry.val(entry.name());
-            j$commentsEntry.val(entry.comment());
-        };
-
-        self.submitUpdate = function()
-        {
-            if (j$idEntry.val() != "")
-            {
-                self.editEntry();
-            }
-            else
-            {
-                self.addEntry();
-            }
+        var entry = {
+          name : j$nameEntry.val(),
+          comment : j$commentsEntry.val(),
+          event_type : j$typeEntry.val(),
+          event_date : railsDateFormatter(j$datepickerEntry.val())
         }
 
-        self.editEntry = function()
-        {
-            var editId = j$idEntry.val();
-            if (editId == "")
-            {
-                var errorArray = ["No event specified to edit"];
-                var errorString = buildErrorMessage(errorArray);
-                j$('#new-error-messages').html(errorString);
-            }
-
-            //TODO - client side validation before submitting
-
-            var entry = {
-              name : j$nameEntry.val(),
-              comment : j$commentsEntry.val(),
-              event_type : j$typeEntry.val(),
-              event_date : railsDateFormatter(j$datepickerEntry.val())
-            }
-
-            j$.ajax('/users/<%= @user.id %>/events/' + editId + '.json',
-            {
-                type: "put",
-                contentType: "json",
-                data: JSON.stringify({"event": entry}),
-                success: function(result)
-                {
-                    console.log("Success");
-                    console.log(result);
-
-                    //remove old value, add the updated value
-                    self.entries.remove(function(event) { return event.id == editId });
-                    self.entries.push( new FeedEntry(result) );
-
-                    //resort
-                    self.entries.sort( sortFunction );
-
-                    j$("#new_modal").modal('hide');
-
-                    resetForm();
-                    clearErrors();
-                },
-                error: function(result)
-                {
-                    console.log("Failure");
-                    console.log(result);
-
-                    var errorArray = JSON.parse(result.responseText)["errors"];
-                    var errorString = buildErrorMessage(errorArray);
-                    j$('#new-error-messages').html(errorString);
-                }
-            });
-        };
-
-        self.initDelete = function(entry)
-        {
-            self.entry_to_delete = entry;
-
-            j$idDelete.val(entry.id);
-            j$dateDelete.val(entry.formattedEventDate());
-            j$typeDelete.val(entry.eventType());
-            j$nameDelete.val(entry.name());
-            j$commentsDelete.val(entry.comment());
-        };
-
-        self.deleteEntry = function()
-        {
-            if (self.entry_to_delete == null)
-            {
-                var errorArray = ["No event specified to delete"];
-                var errorString = buildErrorMessage(errorArray);
-                j$('#delete-error-messages').html(errorString);
-            }
-
-            j$.ajax('/users/<%= @user.id %>/events/' + self.entry_to_delete.id + '.json',
-            {
-                type: "delete",
-                contentType: "json",
-                success: function(result)
-                {
-                    console.log("Success");
-                    console.log(result);
-
-                    //TODO - reset form
-                    self.entries.remove( self.entry_to_delete );
-                    //reset helper
-                    self.entry_to_delete = null;
-
-                    j$("#delete_modal").modal('hide');
-
-                    clearErrors();
-                },
-                error: function(result)
-                {
-                    console.log("Failure");
-                    console.log(result);
-
-                    //TODO - display error messages
-                    var errorArray = JSON.parse(result.responseText)["errors"];
-                    var errorString = buildErrorMessage(errorArray);
-                    j$('#delete-error-messages').html(errorString);            }
-            });
-        }
-
-        //TODO - handle failure
         j$.ajax('/users/<%= @user.id %>/events.json',
         {
-            type: "GET",
-            contentType: "json",
-            success: function(result)
-            {
-              var mappedEntries = j$.map(result, function(entry)
-              {
-                return new FeedEntry(entry);
-              });
-              self.entries(mappedEntries);
-            },
-            failure: function(result)
-            {
-                //TODO - do something
-            }
-        });
+          type: "post",
+          contentType: "json",
+          data: JSON.stringify({"event": entry}),
+          success: function(result)
+          {
+            console.log("Success");
+            console.log(result);
 
-        j$.ajax('/users/<%= @user.id %>/event_types.json',
+            self.entries.push( new FeedEntry(result) );
+            //resort
+            self.entries.sort( sortFunction );
+
+            j$("#new_modal").modal('hide');
+
+            resetForm();
+            clearErrors();
+          },
+          error: function(result)
+          {
+            console.log("Failure");
+            console.log(result);
+
+            //TODO - display error messages
+            var errorArray = JSON.parse(result.responseText)["errors"];
+            var errorString = buildErrorMessage(errorArray);
+            j$('#new-error-messages').html(errorString);
+          }
+        });
+      };
+
+      self.initEdit = function(entry)
+      {
+        j$idEntry.val(entry.id);
+        j$datepickerEntry.attr("value", entry.formattedEventDate());
+        j$datepickerEntry.val(entry.formattedEventDate());
+        j$typeEntry.val(entry.eventType());
+        j$nameEntry.val(entry.name());
+        j$commentsEntry.val(entry.comment());
+
+        validateForm();
+      };
+
+      self.submitUpdate = function()
+      {
+        if (j$addEntryBtn.hasClass('disabled'))
         {
-          type: "GET",
+          //quit
+          return;
+        }
+
+        if (j$idEntry.val() != "")
+        {
+          self.editEntry();
+        }
+        else
+        {
+          self.addEntry();
+        }
+      }
+
+      self.editEntry = function()
+      {
+        var editId = j$idEntry.val();
+        if (editId == "")
+        {
+            var errorArray = ["No event specified to edit"];
+            var errorString = buildErrorMessage(errorArray);
+            j$('#new-error-messages').html(errorString);
+        }
+
+        //TODO - client side validation before submitting
+
+        var entry = {
+          name : j$nameEntry.val(),
+          comment : j$commentsEntry.val(),
+          event_type : j$typeEntry.val(),
+          event_date : railsDateFormatter(j$datepickerEntry.val())
+        }
+
+        j$.ajax('/users/<%= @user.id %>/events/' + editId + '.json',
+        {
+          type: "put",
+          contentType: "json",
+          data: JSON.stringify({"event": entry}),
+          success: function(result)
+          {
+            console.log("Success");
+            console.log(result);
+
+            //remove old value, add the updated value
+            self.entries.remove(function(event) { return event.id == editId });
+            self.entries.push( new FeedEntry(result) );
+
+            //resort
+            self.entries.sort( sortFunction );
+
+            j$("#new_modal").modal('hide');
+
+            resetForm();
+            clearErrors();
+          },
+          error: function(result)
+          {
+            console.log("Failure");
+            console.log(result);
+
+            var errorArray = JSON.parse(result.responseText)["errors"];
+            var errorString = buildErrorMessage(errorArray);
+            j$('#new-error-messages').html(errorString);
+          }
+        });
+      };
+
+      self.initDelete = function(entry)
+      {
+        self.entry_to_delete = entry;
+
+        j$idDelete.val(entry.id);
+        j$dateDelete.val(entry.formattedEventDate());
+        j$typeDelete.val(entry.eventType());
+        j$nameDelete.val(entry.name());
+        j$commentsDelete.val(entry.comment());
+      };
+
+      self.deleteEntry = function()
+      {
+        if (self.entry_to_delete == null)
+        {
+            var errorArray = ["No event specified to delete"];
+            var errorString = buildErrorMessage(errorArray);
+            j$('#delete-error-messages').html(errorString);
+        }
+
+        j$.ajax('/users/<%= @user.id %>/events/' + self.entry_to_delete.id + '.json',
+        {
+          type: "delete",
           contentType: "json",
           success: function(result)
           {
-              console.log("Retrieved event types.")
-              console.log(result);
+            console.log("Success");
+            console.log(result);
 
-              //convert the response into an array
-              var retrievedTypes = result.types;
-              var typeArray = [];
-              for (var i = 0; i < retrievedTypes.length; i++)
-              {
-                  typeArray[i] = retrievedTypes[i].event_type;
-              }
+            //TODO - reset form
+            self.entries.remove( self.entry_to_delete );
+            //reset helper
+            self.entry_to_delete = null;
 
-              //TODO - need to keep this array up to date after new/edit/deletes?
-              //init the typeahead
-              j$typeEntry.typeahead(
-              {
-                source: typeArray
-              });
+            j$("#delete_modal").modal('hide');
+
+            clearErrors();
           },
-          failure: function(result)
+          error: function(result)
           {
-              //TODO - do something?
-              console.log("Failed to retrieve event types.");
+            console.log("Failure");
+            console.log(result);
+
+            //TODO - display error messages
+            var errorArray = JSON.parse(result.responseText)["errors"];
+            var errorString = buildErrorMessage(errorArray);
+            j$('#delete-error-messages').html(errorString);
           }
         });
       }
 
-      resetForm();
-      j$newEventBtn.click(function()
+      //TODO - handle failure
+      j$.ajax('/users/<%= @user.id %>/events.json',
       {
-          //need to ensure this gets reset before showing form
-          resetForm();
+        type: "GET",
+        contentType: "json",
+        success: function(result)
+        {
+          var mappedEntries = j$.map(result, function(entry)
+          {
+            return new FeedEntry(entry);
+          });
+          self.entries(mappedEntries);
+        },
+        failure: function(result)
+        {
+          //TODO - do something
+        }
       });
 
-      fevm = new FeedEntryViewModel();
-      ko.applyBindings(fevm);
+      j$.ajax('/users/<%= @user.id %>/event_types.json',
+      {
+        type: "GET",
+        contentType: "json",
+        success: function(result)
+        {
+          console.log("Retrieved event types.")
+          console.log(result);
+
+          //convert the response into an array
+          var retrievedTypes = result.types;
+          var typeArray = [];
+          for (var i = 0; i < retrievedTypes.length; i++)
+          {
+              typeArray[i] = retrievedTypes[i].event_type;
+          }
+
+          //TODO - need to keep this array up to date after new/edit/deletes?
+          //init the typeahead
+          j$typeEntry.typeahead(
+          {
+            source: typeArray
+          });
+
+          //TODO - create a clickable tag cloud for further filtering
+        },
+        failure: function(result)
+        {
+          //TODO - do something?
+          console.log("Failed to retrieve event types.");
+        }
+      });
+    }
+
+    resetForm();
+    j$newEventBtn.click(function()
+    {
+      //need to ensure this gets reset before showing form
+      resetForm();
+    });
+
+    fevm = new FeedEntryViewModel();
+    fevm.query.subscribe(FeedEntryViewModel.search);
+
+    ko.applyBindings(fevm);
   });
 </script>
