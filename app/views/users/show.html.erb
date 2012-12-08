@@ -1,15 +1,17 @@
 <div class="row-fluid">
   <div class="span3 offset1">
-    <div class="input-append sidebar-section">
+    <div class="input-prepend sidebar-section">
+      <!--<span class="span4">Search:</span>-->
+      <span class="add-on">Search</span>
       <input type="text" class="span8" data-bind="value: query, valueUpdate: 'keyup'"/>
-      <button type="button" class="btn">Search</button>
+      <div id="search-help">Searching will happen as you type</div>
     </div>
   </div>
   <div class="span6">
     <div class="sidebar-section">
       <button type="button" class="btn btn-large btn-primary" id="new-event-btn" title="New Event" alt="New Event" href="#new_modal" data-toggle="modal">New Event</button>
     </div>
-    <ul class="feed-events" data-bind="foreach: entries">
+    <ul class="feed-events" data-bind="foreach: filteredEntries">
       <li>
         <a class="feed-event-image" alt="Event Type Image" title="Event Type Image"></a>
         <span class="feed-event-content">
@@ -33,7 +35,7 @@
 <div class="modal fade" id="new_modal">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">&times;</a>
-    <h3>New Event</h3>
+    <h3 id="modal-new-header">New Event</h3>
   </div>
   <div class="modal-body">
     <span id="new-error-messages"></span>
@@ -82,22 +84,42 @@
 <div class="modal fade" id="delete_modal">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">&times;</a>
-    <h3>Delete Event</h3>
+    <h3">Delete Event</h3>
   </div>
   <div class="modal-body">
-    <h3>Are you sure you want to delete this event?</h3>
-    <br/>
-    <div>
-      <input id="id-delete" type="hidden"/>
-      <label for="type-delete">Type:</label>
-      <input id="type-delete" type="text" readonly></input>
-      <label for="name-delete">Name:</label>
-      <input id="name-delete" type="text" readonly></input>
-      <label for="comments-delete">Comments:</label>
-      <textarea id="comments-delete" class="comments-textarea" readonly></textarea>
-      <label for="date-delete">Date:</label>
-      <input id="date-delete" type="text" readonly></input>
-    </div>
+    <h4>Are you sure you want to delete this event?</h4>
+    <input id="id-delete" type="hidden"/>
+    <form class="form-horizontal">
+      <fieldset>
+        <div class="control-group">
+          <label for="type-delete" class="control-label">Type:</label>
+          <div class="controls">
+            <input id="type-delete" type="text" readonly></input>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label for="name-delete" class="control-label">Name:</label>
+          <div class="controls">
+            <input id="name-delete" type="text" readonly></input>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label for="comments-delete" class="control-label">Comments:</label>
+          <div class="controls">
+            <textarea id="comments-delete" class="comments-textarea" readonly></textarea>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label for="date-delete" class="control-label">Date:</label>
+          <div class="controls">
+            <input id="date-delete" type="text" readonly></input>
+          </div>
+        </div>
+      </fieldset>
+    </form>
     <div>
         <span id="delete-error-messages"></span>
     </div>
@@ -152,6 +174,8 @@
   j$(document).ready(function()
   {
     var dateFormat = 'mm/dd/yyyy';
+
+    var j$modalTitleNew = j$('#modal-new-header');
 
     var j$datepickerEntry = j$('#datepicker-entry');
     var j$newErrorMessages = j$('#new-error-messages');
@@ -249,6 +273,9 @@
 
     var resetForm = function()
     {
+      //change the header of the modal to reflect new
+      j$modalTitleNew.html('New Event');
+
       j$idEntry.val("");
       j$datepickerEntry.attr('');
       j$datepickerEntry.val('')
@@ -366,6 +393,9 @@
 
       self.initEdit = function(entry)
       {
+        //change the header of the modal to reflect edit
+        j$modalTitleNew.html('Edit Event');
+
         j$idEntry.val(entry.id);
         j$datepickerEntry.attr("value", entry.formattedEventDate());
         j$datepickerEntry.val(entry.formattedEventDate());
@@ -559,7 +589,21 @@
     });
 
     fevm = new FeedEntryViewModel();
-    fevm.query.subscribe(FeedEntryViewModel.search);
+
+    fevm.filteredEntries = ko.dependentObservable(function()
+    {
+      var search = this.query().toLowerCase();
+      return ko.utils.arrayFilter(this.entries(), function(entry)
+      {
+        if (search == '') { return true; }
+        if (entry.name().toLowerCase().indexOf(search) >= 0) { return true; }
+        if (entry.comment().toLowerCase().indexOf(search) >= 0) { return true; }
+        if (entry.eventType().toLowerCase().indexOf(search) >= 0) { return true; }
+        if (entry.formattedEventDate().toLowerCase().indexOf(search) >= 0) { return true; }
+
+        return false;
+      });
+    }, fevm);
 
     ko.applyBindings(fevm);
   });
