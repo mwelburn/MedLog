@@ -1,6 +1,6 @@
 <div class="row-fluid">
   <div class="span6 offset3">
-    <h2>Resend unlock instructions</h2>
+    <h2 class="center-tag">Resend unlock instructions</h2>
 
     <%= form_for(resource, :as => resource_name, :url => unlock_path(resource_name), :html => { :class => "form-horizontal", :method => :post }) do |f| %>
       <%= devise_error_messages! %>
@@ -12,7 +12,7 @@
             </div>
           </div>
 
-          <div>
+          <div class="center-tag">
             <%= f.submit "Resend unlock instructions", :class => "btn btn-primary" %>
           </div>
         </fieldset>

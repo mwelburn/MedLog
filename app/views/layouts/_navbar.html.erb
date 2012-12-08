@@ -28,6 +28,7 @@
         <% else %>
           <%= link_to "", user_omniauth_authorize_path(:facebook), :class => "facebook-login" %>
           <%= link_to "", user_omniauth_authorize_path(:twitter), :class => "twitter-login" %>
+          <%= link_to "Sign up", new_user_registration_path, :class => :btn %>
           <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
             Sign in
             <span class="caret"></span>
