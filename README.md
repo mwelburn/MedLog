@@ -11,6 +11,6 @@ Possible items to track include:
 * Vaccinations
 * and more...
 
-Try MedLog now at http://medlogapp.herokuapp.com
+Try MedLog now at http://www.medlogapp.com
 
 Please direct any questions or comments to [Michael Welburn](https://twitter.com/#!/br0nc080)
