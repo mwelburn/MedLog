@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require bootstrap
 //= require bootstrap-datepicker
+//= require mailcheck.min
 //= require knockout-2.1.0
 //= require_tree .
 //= require_self

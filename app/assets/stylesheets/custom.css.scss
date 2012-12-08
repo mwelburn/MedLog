@@ -83,6 +83,14 @@ textarea {
   margin: 5px 0;
 }
 
+a#email-change {
+  color: #ff0000;
+}
+
+a#email-change:hover {
+  cursor: pointer;
+}
+
 .feed-event-image {
   float: left;
   margin-right: 10px;
