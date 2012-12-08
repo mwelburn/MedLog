@@ -19,12 +19,15 @@
               </div>
             </div>
 
-            <div class="control-group">
-              <%= f.label :email, :class => "control-label" %>
-              <div class="controls">
-                <%= f.email_field :email %>
+          <div class="control-group">
+            <%= f.label :email, :class => "control-label" %>
+            <div class="controls">
+              <%= f.email_field :email, :id => "email" %>
+              <div id="email-suggestion" class="form-help-text">
+                Did you mean <a id="email-change" class="email"><span id="email-address" class="address"></span></a>?
               </div>
             </div>
+          </div>
 
             <div class="control-group">
               <%= f.label :password, :class => "control-label" %>
@@ -58,8 +61,6 @@
           </div>
         </fieldset>
     <% end %>
-
-    <h3>Cancel my account</h3>
 
     <p>Unhappy? <%= link_to "Cancel my account", registration_path(resource_name), :confirm => "Are you sure?", :method => :delete %>.</p>
 

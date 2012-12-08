@@ -22,7 +22,10 @@
         <div class="control-group">
           <%= f.label :email, :class => "control-label" %>
           <div class="controls">
-            <%= f.email_field :email %>
+            <%= f.email_field :email, :id => "email" %>
+            <div id="email-suggestion" class="form-help-text">
+              Did you mean <a id="email-change" class="email"><span id="email-address" class="address"></span></a>?
+            </div>
           </div>
         </div>
 
@@ -44,6 +47,7 @@
           <%= f.submit "Sign up", :class => "btn btn-primary" %>
           <br/>
           <br/>
+          <!-- TODO - hide these if returning from OAuth -->
           <%= link_to "", user_omniauth_authorize_path(:facebook), :class => "facebook-login" %>
           <%= link_to "", user_omniauth_authorize_path(:twitter), :class => "twitter-login" %>
         </div>

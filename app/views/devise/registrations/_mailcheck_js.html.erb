@@ -1,0 +1,49 @@
+<% content_for :javascript do %>
+  <script type="text/javascript">
+    var j$ = jQuery.noConflict();
+
+    j$(function()
+    {
+      var j$email = j$('#email');
+      var j$emailSuggestion = j$('#email-suggestion');
+      var j$emailAddress = j$('#email-address');
+      var j$emailChange = j$('#email-change');
+
+      j$emailSuggestion.hide();
+
+      j$email.on('blur', function()
+      {
+        j$(this).mailcheck(
+        {
+          suggested: function(element, suggestion)
+          {
+            // show the help message
+            j$emailAddress.text(suggestion.full);
+            j$emailSuggestion.slideDown('fast');
+          },
+          empty: function(element)
+          {
+            // hide the help message
+            j$emailSuggestion.slideUp('fast', function()
+            {
+              j$emailAddress.text('');
+            });
+          }
+        });
+      });
+
+      j$emailChange.click(function(e)
+      {
+        // update the email field accordingly
+        var corrected_email = j$(this).text();
+        j$email.val(corrected_email);
+
+        // hide the help message
+        j$emailSuggestion.slideUp('fast', function()
+        {
+          j$emailAddress.text('');
+        });
+      });
+    });
+  </script>
+<% end %>
